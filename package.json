@@ -1,0 +1,15 @@
+{
+  "name": "codex-account-switcher",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "description": "Removable local account switcher for the Windows Codex desktop app",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "build:credentials": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-CredentialHost.ps1"
+  }
+}

@@ -1,0 +1,247 @@
+[data-codex-account-menu] {
+  width: min(320px, calc(100vw - 24px)) !important;
+}
+.cs-chevron {
+  margin-inline-start: auto;
+  opacity: 0.55;
+  font-size: 19px;
+  line-height: 1;
+  transition: transform 150ms ease-out;
+}
+[data-codex-account-trigger][aria-expanded="true"] .cs-chevron {
+  opacity: 1;
+}
+.cs-popover {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  width: min(320px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  color-scheme: light dark;
+  background: Canvas;
+  color: CanvasText;
+  border: 1px solid color-mix(in srgb, CanvasText 14%, Canvas);
+  border-radius: 14px;
+  padding: 4px;
+  box-shadow: 0 12px 36px #0004;
+}
+#codex-switcher-dialog {
+  margin: auto;
+  inset: 0;
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  color-scheme: light dark;
+  background: Canvas;
+  color: CanvasText;
+  border: 1px solid color-mix(in srgb, CanvasText 14%, Canvas);
+  border-radius: 16px;
+  padding: 5px;
+  width: min(348px, calc(100vw - 32px));
+  box-shadow: 0 16px 48px #0004;
+}
+#codex-switcher-dialog::backdrop {
+  background: #0005;
+}
+#codex-switcher-dialog[data-anchored="true"]::backdrop {
+  background: transparent;
+}
+#codex-account-panel {
+  --cs-ease: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+  box-sizing: border-box;
+  color-scheme: light dark;
+  color: inherit;
+  padding: 4px 5px 7px;
+  font: 13px/1.45 system-ui;
+  opacity: 0;
+  transform: translateY(-3px);
+  transform-origin: top left;
+  transition:
+    opacity 150ms var(--cs-ease),
+    transform 150ms var(--cs-ease);
+}
+#codex-account-panel[hidden] {
+  display: none !important;
+}
+#codex-account-panel[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+#codex-account-panel[data-instant="true"] {
+  transition: none;
+}
+#codex-account-panel .cs-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2px 3px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+#codex-account-panel button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  border-radius: 9px;
+  transition:
+    background-color 120ms ease,
+    transform 120ms var(--cs-ease);
+}
+#codex-account-panel button:focus-visible {
+  outline: 2px solid Highlight;
+  outline-offset: -2px;
+}
+#codex-account-panel button:disabled {
+  cursor: default;
+}
+#codex-account-panel button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+#codex-account-panel .cs-close {
+  font-size: 19px;
+  width: 28px;
+  height: 28px;
+}
+#codex-account-panel .cs-accounts {
+  max-height: min(290px, 45vh);
+  overflow-y: auto;
+  display: grid;
+  gap: 3px;
+  overscroll-behavior: contain;
+}
+#codex-account-panel .cs-account-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: 10px;
+}
+#codex-account-panel .cs-account-row[data-active="true"] {
+  background: color-mix(in srgb, currentColor 7%, transparent);
+}
+#codex-account-panel .cs-account {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: start;
+  padding: 10px 9px;
+}
+#codex-account-panel .cs-avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-size: 10px;
+  font-weight: 600;
+}
+#codex-account-panel .cs-info {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+#codex-account-panel .cs-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+#codex-account-panel .cs-plan {
+  font-size: 11px;
+  opacity: 0.6;
+  text-transform: capitalize;
+}
+#codex-account-panel .cs-mark {
+  width: 18px;
+  font-size: 14px;
+  flex-shrink: 0;
+  text-align: center;
+}
+#codex-account-panel .cs-remove {
+  width: 28px;
+  height: 30px;
+  margin-inline-end: 3px;
+  font-size: 18px;
+  opacity: 0.6;
+}
+#codex-account-panel .cs-remove[hidden] {
+  display: none;
+}
+#codex-account-panel .cs-actions {
+  display: grid;
+  gap: 3px;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+#codex-account-panel .cs-actions button {
+  text-align: start;
+  padding: 9px 10px;
+}
+#codex-account-panel .cs-save {
+  opacity: 0.7;
+  font-size: 12px;
+}
+#codex-account-panel .cs-status {
+  margin: 9px 8px 3px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+#codex-account-panel .cs-status[role="alert"] {
+  border-inline-start: 2px solid currentColor;
+  padding-inline-start: 8px;
+}
+#codex-account-panel .cs-empty {
+  margin: 8px 9px 14px;
+  opacity: 0.7;
+}
+#codex-account-panel[data-busy="true"] .cs-status::before {
+  content: "";
+  display: inline-block;
+  vertical-align: -0.1em;
+  margin-inline-end: 7px;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: cs-spin 800ms linear infinite;
+}
+#codex-account-panel[data-busy="true"] .cs-account-row {
+  opacity: 0.65;
+}
+@keyframes cs-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  #codex-account-panel button:hover:not(:disabled) {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #codex-account-panel,
+  #codex-account-panel[data-open="true"] {
+    transform: none;
+    transition: none;
+  }
+  #codex-account-panel button,
+  .cs-chevron {
+    transition: none;
+  }
+  #codex-account-panel button:active:not(:disabled) {
+    transform: none;
+  }
+  #codex-account-panel[data-busy="true"] .cs-status::before {
+    animation: none;
+  }
+}
