@@ -1,7 +1,7 @@
 const fs = require("node:fs"),
   path = require("node:path");
 const root = path.resolve(__dirname, ".."),
-  skip = new Set([".git", "node_modules"]),
+  skip = new Set([".git", "node_modules", "dist"]),
   issues = [];
 const forbiddenDirs = new Set([
   "test-data",

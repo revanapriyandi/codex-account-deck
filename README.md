@@ -1,4 +1,4 @@
-# Codex Account Switcher
+# Codex Account Deck
 
 A removable local account switcher for the **Windows Codex desktop app**. Open the profile menu, hover over or select your account name, then choose a saved ChatGPT account. The account list closes after backend identity verification succeeds.
 
@@ -32,7 +32,9 @@ Download the release ZIP, extract it, and double-click **Install.cmd**. Alternat
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Install.ps1
 ```
 
-The installer builds the small DPAPI helper from the included C# source, installs into `%LOCALAPPDATA%\CodexAccountSwitcher`, and creates **Codex Account Switcher** shortcuts on the desktop and Start menu. No administrator rights are required.
+The installer builds the small DPAPI helper from the included C# source, installs into `%LOCALAPPDATA%\CodexAccountSwitcher`, and creates **Codex Account Deck** shortcuts on the desktop and Start menu. No administrator rights are required.
+
+Formerly Codex Account Switcher. The existing installation directory, manifest product ID, and DPAPI entropy remain unchanged for compatibility. Updating replaces this add-on's old shortcuts without discarding saved accounts. Download releases from [revanapriyandi/codex-account-deck](https://github.com/revanapriyandi/codex-account-deck/releases).
 
 Close Codex normally, then use that shortcut. The helper does not stop a running Codex window. Continue using this shortcut for account switching; opening Codex through its original shortcut does not load the add-on. The original shortcut remains available.
 
@@ -74,6 +76,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Start-Sandbox.ps1
 The sandbox uses `%LOCALAPPDATA%\CodexAccountSwitcher-Sandbox`, has separate projects/chats, and never uses the primary `CODEX_HOME`. Complete interactive logins there to test real account switching. Do not copy credentials or runtime profiles into this checkout.
 
 See [architecture and limitations](docs/architecture.md), [verification](docs/verification.md), and [security](SECURITY.md). Runtime reports are local; public reports must exclude account identities, credentials, chat content, and internal project names.
+
+## Build with Instabox
+
+GitHub hosts the source and release downloads. Release ZIP creation and portable tests run on Instabox, without GitHub Actions minutes:
+
+```powershell
+npm run build:instabox -- -Box YOUR_EXISTING_BOX
+```
+
+Run from a clean committed checkout that has been pushed to GitHub. The script uploads only the builder script, checks out the exact public commit in a fresh temporary directory, runs the portable tests, creates a source-only ZIP, and downloads the artifacts into `dist/`. It does not upload a Codex profile or credentials. Omitting `-Box` creates a temporary box with no Vault/Secrets injection and deletes that box afterwards; account quota may require using an existing box.
+
+Artifacts include the ZIP, SHA256SUMS.txt, build-report.json with the exact commit/platform, and portable-tests.txt. The Windows DPAPI helper is compiled locally during installation. Linux builds skip DPAPI and Windows installer tests; run `npm run build:credentials` and `npm test` on Windows for those checks. See [build details](docs/builds.md).
 
 ## Contributing
 

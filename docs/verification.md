@@ -20,7 +20,7 @@ That live run used an isolated profile. It does not establish that the installed
 
 The additional [fresh-start UI report](cold-start-ui-validation-2026-10-27.json) passed both switches, automatic closure, project continuity, reduced motion, and the same main document after reopening the app. It did not send new model requests.
 
-The initial [GitHub Actions run](https://github.com/revanapriyandi/codex-account-switcher/actions/runs/40532357305) did not start any test steps because the repository account was not permitted to start the runner. No hosted CI pass is claimed; the 20-test result above was measured locally.
+The initial [GitHub Actions run](https://github.com/revanapriyandi/codex-account-deck/actions/runs/40532357305) did not start any test steps because the repository account was not permitted to start the runner. No hosted CI pass is claimed; the 20-test result above was measured locally. Version 0.2 adds the Instabox build path and renames the product to Codex Account Deck while retaining its credential and installation compatibility identifiers.
 
 ## Live desktop checklist
 

@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const {execFileSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..'),git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
+const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
+if(git('status','--porcelain'))throw Error('Commit source changes before building a release');
+const commit=git('rev-parse','HEAD'),out=path.join(root,'dist');fs.mkdirSync(out,{recursive:true});
+const filename=`${pkg.name}-v${pkg.version}.zip`,file=path.join(out,filename);
+execFileSync('git',['archive','--format=zip','--prefix='+pkg.name+'/','--output',file,commit],{cwd:root,stdio:'inherit'});
+const digest=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const report={name:pkg.name,version:pkg.version,commit,platform:process.platform,arch:process.arch,node:process.versions.node,createdAt:new Date().toISOString(),artifact:filename,sha256:digest,windowsRuntimeTestedByThisBuild:process.platform==='win32'?null:false,credentialHelper:'Built from included source by the Windows installer'};
+fs.writeFileSync(path.join(out,'build-report.json'),JSON.stringify(report,null,2)+'\n');fs.writeFileSync(path.join(out,'SHA256SUMS.txt'),digest+'  '+filename+'\n');
+console.log(JSON.stringify(report));

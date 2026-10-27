@@ -1,6 +1,6 @@
 param([string]$Config=(Join-Path $PSScriptRoot 'config.json'),[switch]$WaitForExit,[switch]$Interactive)
 $ErrorActionPreference='Stop'
-trap {if($Interactive){$popup=New-Object -ComObject WScript.Shell;$popup.Popup($_.Exception.Message,0,'Codex Account Switcher',48) | Out-Null};Write-Error $_ -ErrorAction Continue;exit 1}
+trap {if($Interactive){$popup=New-Object -ComObject WScript.Shell;$popup.Popup($_.Exception.Message,0,'Codex Account Deck',48) | Out-Null};Write-Error $_ -ErrorAction Continue;exit 1}
 $configPath=[IO.Path]::GetFullPath($Config)
 if(-not (Test-Path -LiteralPath $configPath)){throw 'Run Install.ps1 first, or supply a test configuration.'}
 $settings=Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json

@@ -36,7 +36,7 @@ test("account identity preserves same-email registrations separately", () => {
   assert.equal(a.label, b.label);
   assert.notEqual(a.id, b.id);
 });
-test("Windows DPAPI vault round trip hides tokens in every persisted file", async () => {
+test("Windows DPAPI vault round trip hides tokens in every persisted file", {skip:process.platform!=="win32"}, async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "codex-switcher-vault-"));
   try {
     const secret = "sk-vault-test-" + require("node:crypto").randomUUID();

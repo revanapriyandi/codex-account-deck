@@ -5,5 +5,5 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-echo Use the Codex Account Switcher shortcut after quitting Codex normally.
+echo Use the Codex Account Deck shortcut after quitting Codex normally.
 pause

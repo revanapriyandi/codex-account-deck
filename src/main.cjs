@@ -106,7 +106,7 @@ async function main() {
     );
     if (running.length)
       throw Error(
-        "Close the running Codex window normally, then open Codex Account Switcher. No running window was stopped.",
+        "Close the running Codex window normally, then open Codex Account Deck. No running window was stopped.",
       );
     if (!fs.existsSync(home) || !fs.existsSync(profile))
       throw Error(

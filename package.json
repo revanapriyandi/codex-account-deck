@@ -1,6 +1,6 @@
 {
-  "name": "codex-account-switcher",
-  "version": "0.1.0-beta.1",
+  "name": "codex-account-deck",
+  "version": "0.2.0-beta.1",
   "private": true,
   "description": "Removable local account switcher for the Windows Codex desktop app",
   "license": "MIT",
@@ -10,6 +10,8 @@
   },
   "scripts": {
     "test": "node --test test/*.test.cjs",
-    "build:credentials": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-CredentialHost.ps1"
+    "build:credentials": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-CredentialHost.ps1",
+    "build:release": "node scripts/build-release.cjs",
+    "build:instabox": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-Instabox.ps1"
   }
 }

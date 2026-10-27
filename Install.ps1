@@ -48,14 +48,15 @@ $shortcuts=@()
 if(-not $NoShortcuts){
  $shell=New-Object -ComObject WScript.Shell
  foreach($folder in @([Environment]::GetFolderPath('Desktop'),(Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs'))){
-  $link=Join-Path $folder 'Codex Account Switcher.lnk'
+  $link=Join-Path $folder 'Codex Account Deck.lnk'
   if(Test-Path -LiteralPath $link){$existing=$shell.CreateShortcut($link);if($existing.Arguments -notlike ('*'+(Join-Path $app 'Launch.ps1')+'*')){throw ('Shortcut name is already in use: '+$link)}}
   $shortcut=$shell.CreateShortcut($link);$shortcut.TargetPath=Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe';$shortcut.Arguments='-NoLogo -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "'+(Join-Path $app 'Launch.ps1')+'" -Interactive';$shortcut.WorkingDirectory=$app
   if($pkg){$shortcut.IconLocation=(Join-Path $pkg.InstallLocation 'app\ChatGPT.exe')+',0'}
   $shortcut.Description='Open official Codex with the local account switcher';$shortcut.Save();$shortcuts+=$link
  }
 }
+if($old -and -not $NoShortcuts){foreach($oldLink in $old.shortcuts){if($oldLink -notin $shortcuts -and (Test-Path -LiteralPath $oldLink)){$prior=$shell.CreateShortcut($oldLink);if($prior.Arguments -like ('*'+(Join-Path $app 'Launch.ps1')+'*')){Remove-Item -LiteralPath $oldLink -Force}}}}
 $entries=@($files | ForEach-Object {@{path=('app\'+$_);sha256=(Get-Sha256 (Join-Path $app $_))}})
-@{product='codex-account-switcher';schema=1;version='0.1.0-beta.1';files=$entries;shortcuts=$shortcuts} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $marker -Encoding utf8
+@{product='codex-account-switcher';displayName='Codex Account Deck';schema=1;version='0.2.0-beta.1';files=$entries;shortcuts=$shortcuts} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $marker -Encoding utf8
 Write-Output ('Installed: '+$root)
-Write-Output 'Close Codex normally, then use the Codex Account Switcher shortcut. Existing chats and projects use the original profiles.'
+Write-Output 'Close Codex normally, then use the Codex Account Deck shortcut. Existing chats and projects use the original profiles.'

@@ -17,5 +17,6 @@ auth.json
 !*.example
 coverage/
 artifacts/
+dist/
 .DS_Store
 Thumbs.db
