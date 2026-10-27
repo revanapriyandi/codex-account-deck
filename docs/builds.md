@@ -2,6 +2,8 @@
 
 The project does not require GitHub-hosted runners. GitHub stores public source and downloadable releases; Instabox executes the release build.
 
+The Windows GitHub workflow is manual-only, so pushes and pull requests do not request paid GitHub runners. Trigger it only if hosted Windows minutes become available again.
+
 ## Local checks
 
 On Windows, `npm run build:credentials` builds CredentialHost.exe from source and `npm test` includes the DPAPI and PowerShell installer checks. On Linux, the same suite explicitly skips those Windows-only cases. Skipped tests are not counted as Windows passes.

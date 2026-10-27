@@ -22,6 +22,8 @@ The additional [fresh-start UI report](cold-start-ui-validation-2026-10-27.json)
 
 The initial [GitHub Actions run](https://github.com/revanapriyandi/codex-account-deck/actions/runs/40532357305) did not start any test steps because the repository account was not permitted to start the runner. No hosted CI pass is claimed; the 20-test result above was measured locally. Version 0.2 adds the Instabox build path and renames the product to Codex Account Deck while retaining its credential and installation compatibility identifiers.
 
+For version 0.2, the renamed installer and current code passed all 20 tests on Windows. The first Instabox Linux build of commit `af651159d750e42cf0119e726abd78633764af44` passed 17 portable tests with 3 Windows-only tests explicitly skipped, then produced the ZIP and its SHA-256 manifest. The installed-name migration was also checked: both encrypted account files had unchanged hashes, the new Codex Account Deck shortcut existed, and the previous add-on shortcut was removed. Final release artifacts include the exact remote source commit in build-report.json. GitHub runner execution is now manual-only.
+
 ## Live desktop checklist
 
 Use a sandbox and two accounts that you are authorized to use. Never publish auth files or account identities.
