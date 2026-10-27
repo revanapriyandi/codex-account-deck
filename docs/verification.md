@@ -18,6 +18,10 @@ On 27 October 2026, all 20 automated tests passed locally on Windows, including 
 
 That live run used an isolated profile. It does not establish that the installed primary profile has already been activated or tested after a future official update. Presentation frame timing was not measured. In that run, end-to-end switch verification took about 10 and 16 seconds; backend startup and machine load affect latency.
 
+The additional [fresh-start UI report](cold-start-ui-validation-2026-10-27.json) passed both switches, automatic closure, project continuity, reduced motion, and the same main document after reopening the app. It did not send new model requests.
+
+The initial [GitHub Actions run](https://github.com/revanapriyandi/codex-account-switcher/actions/runs/40532357305) did not start any test steps because the repository account was not permitted to start the runner. No hosted CI pass is claimed; the 20-test result above was measured locally.
+
 ## Live desktop checklist
 
 Use a sandbox and two accounts that you are authorized to use. Never publish auth files or account identities.
