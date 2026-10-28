@@ -4,6 +4,10 @@ A removable local account switcher for the **Windows Codex desktop app**. Open t
 
 **Experimental beta.** This is an independent community add-on, not an official OpenAI plugin. It uses internal desktop interfaces that can change. The official application is not redistributed or patched.
 
+![Native profile menu and saved account list](docs/screenshots/account-deck.png)
+
+Captured from the actual Windows desktop UI. Account labels and initials were replaced for privacy, and the underlying project/chat area was hidden during capture. See [screenshots](docs/screenshots/README.md).
+
 ## What it does
 
 - Adds the account list to the existing account-name row. No extra profile-menu item.
@@ -20,7 +24,7 @@ Backend reconnection takes time. The UI remains responsive and displays progress
 
 - Windows, the official `OpenAI.Codex` MSIX package, Node.js 22 or newer, and Windows PowerShell/.NET Framework.
 - ChatGPT login stored in a local Codex `auth.json`. Keychain-only credentials and API-key switching are not supported.
-- Initially allowlisted package: **26.1021.3705.0**, desktop **26.1021.31345**. Compatibility also checks packaged bridge fingerprints.
+- Reviewed packages: **26.1021.3705.0** (desktop **26.1021.31345**) and **26.1023.6123.0** (desktop **26.1023.50603**). Compatibility also checks exact packaged bridge fingerprints and the reviewed bundle paths for each version.
 
 An unknown app version disables injection and opens the official app unchanged. This preserves access to Codex after an update; the add-on needs another compatibility review before it can operate on that version. Future updates cannot be guaranteed compatible in advance.
 

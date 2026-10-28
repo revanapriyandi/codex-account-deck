@@ -9,6 +9,7 @@ $ErrorActionPreference='Stop'
 function Get-Sha256([string]$File){$stream=[IO.File]::OpenRead($File);$hash=[Security.Cryptography.SHA256]::Create();try{return ([BitConverter]::ToString($hash.ComputeHash($stream))).Replace('-','').ToLowerInvariant()}finally{$stream.Dispose();$hash.Dispose()}}
 $root=[IO.Path]::GetFullPath($InstallRoot)
 $source=[IO.Path]::GetFullPath($PSScriptRoot)
+$releaseVersion=(Get-Content -LiteralPath (Join-Path $source 'package.json') -Raw | ConvertFrom-Json).version
 if($root -eq $source -or $root.StartsWith($source+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Choose an installation directory outside the source checkout.'}
 $marker=Join-Path $root 'installation.json'
 if((Test-Path -LiteralPath $root) -and @(Get-ChildItem -LiteralPath $root -Force).Count -and -not (Test-Path -LiteralPath $marker)){throw 'Installation directory is not empty and is not owned by this add-on.'}
@@ -57,6 +58,6 @@ if(-not $NoShortcuts){
 }
 if($old -and -not $NoShortcuts){foreach($oldLink in $old.shortcuts){if($oldLink -notin $shortcuts -and (Test-Path -LiteralPath $oldLink)){$prior=$shell.CreateShortcut($oldLink);if($prior.Arguments -like ('*'+(Join-Path $app 'Launch.ps1')+'*')){Remove-Item -LiteralPath $oldLink -Force}}}}
 $entries=@($files | ForEach-Object {@{path=('app\'+$_);sha256=(Get-Sha256 (Join-Path $app $_))}})
-@{product='codex-account-switcher';displayName='Codex Account Deck';schema=1;version='0.2.0-beta.1';files=$entries;shortcuts=$shortcuts} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $marker -Encoding utf8
+@{product='codex-account-switcher';displayName='Codex Account Deck';schema=1;version=$releaseVersion;files=$entries;shortcuts=$shortcuts} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $marker -Encoding utf8
 Write-Output ('Installed: '+$root)
 Write-Output 'Close Codex normally, then use the Codex Account Deck shortcut. Existing chats and projects use the original profiles.'

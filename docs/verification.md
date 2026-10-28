@@ -24,6 +24,20 @@ The initial [GitHub Actions run](https://github.com/revanapriyandi/codex-account
 
 For version 0.2, the renamed installer and current code passed all 20 tests on Windows. The first Instabox Linux build of commit `af651159d750e42cf0119e726abd78633764af44` passed 17 portable tests with 3 Windows-only tests explicitly skipped, then produced the ZIP and its SHA-256 manifest. The installed-name migration was also checked: both encrypted account files had unchanged hashes, the new Codex Account Deck shortcut existed, and the previous add-on shortcut was removed. Final release artifacts include the exact remote source commit in build-report.json. GitHub runner execution is now manual-only.
 
+## 28 October 2026 update validation
+
+The installed official package had updated to **26.1023.6123.0**, desktop **26.1023.50603**, build 22391. The previous guard refused the changed bundle layout before injection. Support now resolves an explicitly reviewed pair of main/backend bundle paths for each allowlisted package, then verifies all three exact bridge digests. Unknown versions and altered contents remain rejected. The new regression check covers changed bundle filenames with deliberately altered contents.
+
+The [full desktop report](validation-2026-10-28.json) passed on the updated app with its test window visible: real model replies on both accounts, A → B → A identity verification, automatic panel closure, zero main-frame navigation, preserved test chat and all 20 local project registrations, active-work refusal, and reduced-motion behavior. Switch verification in that run took 8.608 and 4.861 seconds. An additional [UI round trip](ui-validation-2026-10-28.json) passed at 4.757 and 5.119 seconds. Those timings are observed samples, not latency guarantees.
+
+The app no longer exposes `project/list`; the verification script compares project IDs through a read-only connection to the isolated local SQLite registry. It waits for the profile control after backend reconnects before operating the next menu. Earlier attempts that failed during test development are not included as passing reports. No induced real-credential rollback failure was tested.
+
+The official GUI process is launched visibly while its helper stays hidden. This fixes the hidden test window that previously prevented faithful screenshots. The [screenshots](screenshots/README.md) were inspected individually before publication; account labels/initials were replaced only in the rendered page and the private background was hidden during capture.
+
+All **21 automated tests** passed on Windows, including the new package-layout regression. The isolated desktop tests do not establish activation in the primary profile or compatibility with an unreviewed future version. Animation presentation frame timing was not measured.
+
+Before/after SHA-256 comparisons of the official executable, app.asar, and chrome.dll were identical. The primary profile retained 1,628 local thread rows and 20 project rows during this run. Updating the installed add-on to 0.2.0-beta.2 retained both encrypted saved-account files byte for byte. The installer now records its version from package.json so the installation manifest follows the release version.
+
 ## Live desktop checklist
 
 Use a sandbox and two accounts that you are authorized to use. Never publish auth files or account identities.

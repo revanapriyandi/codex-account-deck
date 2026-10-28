@@ -1,0 +1,42 @@
+{
+  "scope": "full-desktop",
+  "isolated": true,
+  "mainFrameNavigations": 0,
+  "transitions": [
+    {
+      "account": "B",
+      "elapsedMs": 8608,
+      "backendMatched": true,
+      "autoClosed": true
+    },
+    {
+      "account": "A",
+      "elapsedMs": 4861,
+      "backendMatched": true,
+      "autoClosed": true
+    }
+  ],
+  "modelRequests": [
+    {
+      "account": "A",
+      "completed": true,
+      "expectedText": true,
+      "toolsUsed": false
+    },
+    {
+      "account": "B",
+      "completed": true,
+      "expectedText": true,
+      "toolsUsed": false
+    }
+  ],
+  "activeWorkRefused": true,
+  "chatPreserved": true,
+  "projectsPreserved": true,
+  "reducedMotion": true,
+  "originalRestored": true,
+  "passed": true,
+  "projectCount": 20,
+  "projectVerification": "read-only local SQLite registry",
+  "sameDocument": true
+}

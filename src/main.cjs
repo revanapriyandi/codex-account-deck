@@ -138,7 +138,7 @@ async function main() {
   if (isolated) flags.push("--user-data-dir=" + profile, "--no-first-run");
   child = spawn(pkg.executable, flags, {
     env,
-    windowsHide: true,
+    windowsHide: false,
     stdio: ["ignore", "pipe", "pipe"],
   });
   child.on("error", () =>

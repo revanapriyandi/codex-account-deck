@@ -38,7 +38,6 @@ async function click(c, selector) {
 }
 async function rpc(c, method, params) {
   const allowed = new Set([
-    "project/list",
     "account/read",
     "model/list",
     "thread/start",
@@ -49,7 +48,7 @@ async function rpc(c, method, params) {
   ]);
   if (!allowed.has(method)) throw Error("Unsupported verification operation");
   return c.evaluate(
-    `new Promise((resolve,reject)=>{const id='switcher-e2e-'+crypto.randomUUID(),timer=setTimeout(()=>{window.removeEventListener('message',listener);reject(Error('Backend verification timed out'));},30000);function listener(e){const d=e.data;if(d?.type!=='mcp-response'||d.message?.id!==id)return;clearTimeout(timer);window.removeEventListener('message',listener);d.message.error?reject(Error('Backend rejected verification: '+d.message.error.code)):resolve(d.message.result);}window.addEventListener('message',listener);electronBridge.sendMessageFromView({type:'mcp-request',hostId:'local',request:{id,method:${JSON.stringify(method)},params:${JSON.stringify(params)}}}).catch(reject);})`,
+    `new Promise((resolve,reject)=>{const id='switcher-e2e-'+crypto.randomUUID(),timer=setTimeout(()=>{window.removeEventListener('message',listener);reject(Error('Backend verification timed out'));},30000);function listener(e){const d=e.data;if(d?.type!=='mcp-response'||d.message?.id!==id)return;clearTimeout(timer);window.removeEventListener('message',listener);d.message.error?reject(Error(${JSON.stringify("Backend rejected " + method + ": ")}+d.message.error.code)):resolve(d.message.result);}window.addEventListener('message',listener);electronBridge.sendMessageFromView({type:'mcp-request',hostId:'local',request:{id,method:${JSON.stringify(method)},params:${JSON.stringify(params)}}}).catch(reject);})`,
     undefined,
     35000,
   );
@@ -66,8 +65,10 @@ async function open(c) {
     !(await c.evaluate(
       '!!document.querySelector("[data-codex-account-trigger]")',
     ))
-  )
+  ) {
+    await wait(c, '!!document.querySelector(\'button[aria-label="Open profile menu"]\')', 30000);
     await click(c, 'button[aria-label="Open profile menu"]');
+  }
   await wait(c, '!!document.querySelector("[data-codex-account-trigger]")');
   await click(c, "[data-codex-account-trigger]");
   await wait(
@@ -147,6 +148,17 @@ async function finishTurn(c, threadId) {
     passed: false,
   };
   const threads = [];
+  function projectIds() {
+    const { DatabaseSync } = require("node:sqlite");
+    const db = new DatabaseSync(path.join(root, "codex-home/state_5.sqlite"), {
+      readOnly: true,
+    });
+    try {
+      return db.prepare("SELECT id FROM projects ORDER BY id").all().map((p) => p.id);
+    } finally {
+      db.close();
+    }
+  }
   async function switchTo(label, account) {
     console.log("Opening account list for " + label);
     await open(c);
@@ -181,7 +193,9 @@ async function finishTurn(c, threadId) {
     c.on("Page.frameNavigated", (e) => {
       if (e.frame.id === frame.id) report.mainFrameNavigations++;
     });
-    const before = await rpc(c, "project/list", { limit: 100 });
+    const before = projectIds();
+    report.projectCount = before.length;
+    report.projectVerification = "read-only local SQLite registry";
     for (const [label, account] of [
       ["A", original],
       ["B", second],
@@ -241,10 +255,9 @@ async function finishTurn(c, threadId) {
     }
     await switchTo("A", original);
     report.originalRestored = true;
-    const after = await rpc(c, "project/list", { limit: 100 });
+    const after = projectIds();
     report.projectsPreserved =
-      JSON.stringify(before.data.map((p) => p.id).sort()) ===
-      JSON.stringify(after.data.map((p) => p.id).sort());
+      JSON.stringify(before) === JSON.stringify(after);
     assert.ok(report.projectsPreserved);
     await open(c);
     await c.send("Emulation.setEmulatedMedia", {

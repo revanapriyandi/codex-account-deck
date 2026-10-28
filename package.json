@@ -1,6 +1,6 @@
 {
   "name": "codex-account-deck",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "private": true,
   "description": "Removable local account switcher for the Windows Codex desktop app",
   "license": "MIT",
