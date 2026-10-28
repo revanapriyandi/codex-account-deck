@@ -38,6 +38,7 @@ Function .onInit
     Quit
   ${EndIf}
   SetShellVarContext current
+  SetRegView 64
   ${GetParameters} $0
   ClearErrors
   ${GetOptions} $0 "/TESTMODE" $1
@@ -84,6 +85,7 @@ Section "Install"
 SectionEnd
 
 Section "Uninstall"
+  SetRegView 64
   StrCpy $PowerShell "$WINDIR\Sysnative\WindowsPowerShell\v1.0\powershell.exe"
   IfFileExists "$PowerShell" +2 0
     StrCpy $PowerShell "$SYSDIR\WindowsPowerShell\v1.0\powershell.exe"

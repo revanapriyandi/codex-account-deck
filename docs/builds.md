@@ -29,3 +29,11 @@ The EXE is unsigned. No signing certificate is configured. Windows publisher/rep
 Instabox Linux validates portable code and packages the release. It cannot validate a real Windows Codex session or Windows DPAPI behavior. Cloudflare Workers Builds is also Linux-based and would have the same limitation. Official references: [Cloudflare build image](https://developers.cloudflare.com/workers/ci-cd/builds/build-image/) and [Microsoft ProtectedData](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.protecteddata).
 
 Real two-account desktop evidence and Windows installer results are documented separately in verification.md. The build does not change Codex update settings or weaken the compatibility guard.
+
+Test the actual setup EXE on Windows with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-installer.ps1 -Installer .\dist\codex-account-deck-v0.2.0-beta.3-setup.exe -LaunchSmoke
+```
+
+This uses a new temporary directory, disables global Node discovery in the test process, and exercises install, isolated app launch/close, reinstall, active-helper refusal, unowned-directory refusal, and EXE uninstall with retained data. `/TESTMODE` suppresses shortcuts and uninstall registration for this isolated verification. Reports stay in the temporary directory; never publish a runtime profile.
