@@ -1,0 +1,30 @@
+{
+  "scope": "ui-roundtrip",
+  "isolated": true,
+  "mainFrameNavigations": 0,
+  "transitions": [
+    {
+      "account": "B",
+      "elapsedMs": 9746,
+      "backendMatched": true,
+      "autoClosed": true
+    },
+    {
+      "account": "A",
+      "elapsedMs": 10270,
+      "backendMatched": true,
+      "autoClosed": true
+    }
+  ],
+  "modelRequests": [],
+  "activeWorkRefused": false,
+  "chatPreserved": false,
+  "projectsPreserved": true,
+  "reducedMotion": true,
+  "originalRestored": true,
+  "passed": true,
+  "menuEntry": "native account-name hover",
+  "projectCount": 20,
+  "projectVerification": "read-only local SQLite registry",
+  "sameDocument": true
+}

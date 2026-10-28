@@ -38,6 +38,18 @@ All **21 automated tests** passed on Windows, including the new package-layout r
 
 Before/after SHA-256 comparisons of the official executable, app.asar, and chrome.dll were identical. The primary profile retained 1,628 local thread rows and 20 project rows during this run. Updating the installed add-on to 0.2.0-beta.2 retained both encrypted saved-account files byte for byte. The installer now records its version from package.json so the installation manifest follows the release version.
 
+## Windows EXE packaging
+
+Version **0.2.0-beta.3** replaces the manual installation ZIP with a single Windows x64 NSIS setup EXE. The [build record](installer-build-0.2.0-beta.3.json) identifies the exact Instabox source commit, NSIS compiler, official Node.js runtime archive/checksum, and output checksum. The EXE is unsigned.
+
+The [Windows EXE lifecycle report](installer-validation-2026-10-28.json) passed against that output. With global Node discovery disabled in the test process, it installed into a path containing spaces, ran the bundled Node 22.23.4 runtime, launched an isolated Codex window to helper-ready status, closed it normally, reinstalled without changing retained data, refused an active-helper upgrade and an unowned directory, and uninstalled through the generated EXE while retaining saved data and an unrelated file. Sandbox testing left the primary uninstall registry entry unchanged.
+
+The actual Windows executable was built on Instabox; the Linux test result alone is not the Windows lifecycle result. Account-switching and real model-request evidence remains in the desktop reports above.
+
+After installing the final EXE into the existing add-on directory, all 21 automated tests also passed under its bundled Node 22.23.4. The real upgrade registered the Windows uninstall entry and retained both encrypted account files with identical hashes.
+
+An additional [bundled-runtime UI round trip](bundled-runtime-ui-validation-2026-10-28.json), launched through the installed add-on with its private Node runtime, passed account-name hover entry, A → B → A backend identity checks, automatic closure, all 20 project registrations, reduced motion, original-account restoration, and zero main-frame navigation. No new model requests were sent during this packaging-specific round trip. The verification harness now moves the pointer before clicking and checks whether the native profile menu is already expanded before opening it; earlier synthetic-input attempts timed out while reopening the account list.
+
 ## Live desktop checklist
 
 Use a sandbox and two accounts that you are authorized to use. Never publish auth files or account identities.

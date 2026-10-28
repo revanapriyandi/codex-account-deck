@@ -13,7 +13,7 @@ async function wait(c, expression, timeout = 20000) {
   const state = await c
     .evaluate("globalThis.__codexSwitcher?.getStatus?.()")
     .catch(() => null);
-  throw Error("Desktop condition timed out: " + JSON.stringify(state));
+  throw Error("Desktop condition timed out: " + expression.slice(0, 160) + " state=" + JSON.stringify(state));
 }
 async function click(c, selector) {
   await c.evaluate(
@@ -23,6 +23,7 @@ async function click(c, selector) {
   const p = await c.evaluate(
     `(()=>{const n=document.querySelector(${JSON.stringify(selector)});if(!n)throw Error(${JSON.stringify("Control missing: " + selector.replace(/[a-f0-9]{64}/g, "[account]"))});const r=n.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;if(!n.contains(document.elementFromPoint(x,y)))throw Error('Control is obscured');return{x,y}})()`,
   );
+  await c.send("Input.dispatchMouseEvent", { type: "mouseMoved", ...p });
   await c.send("Input.dispatchMouseEvent", {
     type: "mousePressed",
     button: "left",
@@ -67,13 +68,18 @@ async function open(c) {
     ))
   ) {
     await wait(c, '!!document.querySelector(\'button[aria-label="Open profile menu"]\')', 30000);
-    await click(c, 'button[aria-label="Open profile menu"]');
+    if (!(await c.evaluate('document.querySelector(\'button[aria-label="Open profile menu"]\')?.getAttribute("aria-expanded")==="true"')))
+      await click(c, 'button[aria-label="Open profile menu"]');
   }
   await wait(c, '!!document.querySelector("[data-codex-account-trigger]")');
-  await click(c, "[data-codex-account-trigger]");
+  const point = await c.evaluate(
+    '(()=>{const n=document.querySelector("[data-codex-account-trigger]"),r=n.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()',
+  );
+  await c.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 2, y: 2 });
+  await c.send("Input.dispatchMouseEvent", { type: "mouseMoved", ...point });
   await wait(
     c,
-    'document.querySelector("#codex-account-panel")?.dataset.busy==="false"',
+    'document.querySelector("#codex-account-panel")?.hidden===false&&document.querySelector("#codex-account-panel")?.dataset.busy==="false"',
   );
 }
 async function finishTurn(c, threadId) {
@@ -146,6 +152,7 @@ async function finishTurn(c, threadId) {
     reducedMotion: false,
     originalRestored: false,
     passed: false,
+    menuEntry: "native account-name hover",
   };
   const threads = [];
   function projectIds() {
