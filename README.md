@@ -22,7 +22,7 @@ Backend reconnection takes time. The UI remains responsive and displays progress
 
 ## Requirements and compatibility
 
-- Windows, the official `OpenAI.Codex` MSIX package, Node.js 22 or newer, and Windows PowerShell/.NET Framework.
+- 64-bit Windows, the official `OpenAI.Codex` MSIX package, and Windows PowerShell/.NET Framework. The EXE installer includes its own Node.js runtime; source installation requires Node.js 22 or newer on PATH.
 - ChatGPT login stored in a local Codex `auth.json`. Keychain-only credentials and API-key switching are not supported.
 - Reviewed packages: **26.1021.3705.0** (desktop **26.1021.31345**) and **26.1023.6123.0** (desktop **26.1023.50603**). Compatibility also checks exact packaged bridge fingerprints and the reviewed bundle paths for each version.
 
@@ -30,13 +30,15 @@ An unknown app version disables injection and opens the official app unchanged. 
 
 ## Install once
 
-Download the release ZIP, extract it, and double-click **Install.cmd**. Alternatively, clone this repository and run from PowerShell:
+Download **codex-account-deck-v0.2.0-beta.3-setup.exe** from the [latest release](https://github.com/revanapriyandi/codex-account-deck/releases/tag/v0.2.0-beta.3) and run it. There is no ZIP to extract and no separate Node.js installation. The installer runs for the current Windows account without administrator rights.
+
+Alternatively, clone this repository and run from PowerShell with an existing Node.js installation:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Install.ps1
 ```
 
-The installer builds the small DPAPI helper from the included C# source, installs into `%LOCALAPPDATA%\CodexAccountSwitcher`, and creates **Codex Account Deck** shortcuts on the desktop and Start menu. No administrator rights are required.
+The installer builds the small DPAPI helper from the included C# source, installs into `%LOCALAPPDATA%\CodexAccountSwitcher`, and creates **Codex Account Deck** shortcuts on the desktop and Start menu. Its private Node.js runtime does not change system PATH. The EXE also registers an uninstall entry in Windows Settings.
 
 Formerly Codex Account Switcher. The existing installation directory, manifest product ID, and DPAPI entropy remain unchanged for compatibility. Updating replaces this add-on's old shortcuts without discarding saved accounts. Download releases from [revanapriyandi/codex-account-deck](https://github.com/revanapriyandi/codex-account-deck/releases).
 
@@ -61,7 +63,9 @@ Only use accounts you control or are authorized to use. Account labels and plan 
 
 ## Uninstall
 
-Close the add-on Codex window normally, then run:
+Close the add-on Codex window normally, then choose **Codex Account Deck** in Windows **Settings → Apps → Installed apps**, or run `%LOCALAPPDATA%\CodexAccountSwitcher\Uninstall.exe`.
+
+For source installations, use:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\CodexAccountSwitcher\app\Uninstall.ps1"
@@ -83,15 +87,15 @@ See [architecture and limitations](docs/architecture.md), [verification](docs/ve
 
 ## Build with Instabox
 
-GitHub hosts the source and release downloads. Release ZIP creation and portable tests run on Instabox, without GitHub Actions minutes:
+GitHub hosts the source and release downloads. Windows EXE creation and portable tests run on Instabox, without GitHub Actions minutes:
 
 ```powershell
 npm run build:instabox -- -Box YOUR_EXISTING_BOX
 ```
 
-Run from a clean committed checkout that has been pushed to GitHub. The script uploads only the builder script, checks out the exact public commit in a fresh temporary directory, runs the portable tests, creates a source-only ZIP, and downloads the artifacts into `dist/`. It does not upload a Codex profile or credentials. Omitting `-Box` creates a temporary box with no Vault/Secrets injection and deletes that box afterwards; account quota may require using an existing box.
+Run from a clean committed checkout that has been pushed to GitHub. The script uploads only the builder script, checks out the exact public commit in a fresh temporary directory, runs the portable tests, compiles the NSIS installer, and downloads it into `dist/`. It does not upload a Codex profile or credentials. Omitting `-Box` creates a temporary box with no Vault/Secrets injection and deletes that box afterwards; account quota may require using an existing box.
 
-Artifacts include the ZIP, SHA256SUMS.txt, build-report.json with the exact commit/platform, and portable-tests.txt. The Windows DPAPI helper is compiled locally during installation. Linux builds skip DPAPI and Windows installer tests; run `npm run build:credentials` and `npm test` on Windows for those checks. See [build details](docs/builds.md).
+The public release asset is a single setup EXE. Local build artifacts also include SHA256SUMS.txt, build-report.json with the exact commit/platform/runtime checksum, and portable-tests.txt. The Windows DPAPI helper is compiled locally during installation. Linux builds skip DPAPI and Windows installer tests; run `npm run build:credentials` and `npm test` on Windows for those checks. See [build details](docs/builds.md).
 
 ## Contributing
 

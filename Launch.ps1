@@ -4,7 +4,8 @@ trap {if($Interactive){$popup=New-Object -ComObject WScript.Shell;$popup.Popup($
 $configPath=[IO.Path]::GetFullPath($Config)
 if(-not (Test-Path -LiteralPath $configPath)){throw 'Run Install.ps1 first, or supply a test configuration.'}
 $settings=Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
-$node=(Get-Command node.exe -ErrorAction Stop).Source
+$bundledNode=Join-Path $PSScriptRoot 'runtime\node.exe'
+$node=if(Test-Path -LiteralPath $bundledNode){$bundledNode}else{(Get-Command node.exe -ErrorAction Stop).Source}
 $pkg=Get-AppxPackage -Name OpenAI.Codex | Sort-Object Version -Descending | Select-Object -First 1
 if(-not $pkg){throw 'The official Codex Windows package is not installed.'}
 if($settings.mode -eq 'desktop') {

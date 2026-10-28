@@ -17,7 +17,8 @@ if(Test-Path -LiteralPath $marker){$old=Get-Content -LiteralPath $marker -Raw | 
 $data=Join-Path $root 'data'
 $lock=Join-Path $data 'helper.lock'
 if(Test-Path -LiteralPath $lock){$helperId=0;if([int]::TryParse((Get-Content -LiteralPath $lock -Raw).Trim(),[ref]$helperId) -and (Get-Process -Id $helperId -ErrorAction SilentlyContinue)){throw 'Close the add-on Codex window before updating this installation.'}}
-$node=(Get-Command node.exe -ErrorAction Stop).Source
+$bundledNode=Join-Path $source 'runtime\node.exe'
+$node=if(Test-Path -LiteralPath $bundledNode){$bundledNode}else{(Get-Command node.exe -ErrorAction Stop).Source}
 if(([version]((& $node --version).TrimStart('v'))).Major -lt 22){throw 'Node.js 22 or newer is required.'}
 $pkg=$null
 if(-not $Sandbox){
@@ -35,6 +36,10 @@ New-Item -ItemType Directory -Path $root,$data -Force | Out-Null
 $app=Join-Path $root 'app'
 New-Item -ItemType Directory -Path $app,(Join-Path $app 'src'),(Join-Path $app 'scripts') -Force | Out-Null
 $files=@('Launch.ps1','Uninstall.ps1','Start-Hidden.vbs','README.md','LICENSE','package.json')
+if(Test-Path -LiteralPath $bundledNode){
+ New-Item -ItemType Directory -Path (Join-Path $app 'runtime') -Force | Out-Null
+ $files+=@('runtime\node.exe','runtime\LICENSE')
+}
 $files+=@(Get-ChildItem -LiteralPath (Join-Path $source 'src') -File | Where-Object Extension -in '.cjs','.js','.css','.ps1','.cs' | ForEach-Object {'src\'+$_.Name})
 $files+=@('scripts\Build-CredentialHost.ps1')
 foreach($relative in $files){$from=Join-Path $source $relative;$to=Join-Path $app $relative;if(-not (Test-Path -LiteralPath $to) -or (Get-Sha256 $from) -ne (Get-Sha256 $to)){Copy-Item -LiteralPath $from -Destination $to -Force}}

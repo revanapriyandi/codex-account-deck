@@ -18,9 +18,11 @@ npm run build:instabox -- -Box YOUR_EXISTING_BOX
 
 The command uses a clean public clone pinned to the full commit SHA. Build scripts execute with a sanitized environment and disabled global Git configuration. Existing application checkouts are not used or altered. All working files live in a fresh account-deck-build directory. Supplying an existing box leaves that box intact; the wrapper only deletes a box it creates itself.
 
-The ZIP contains tracked source, installer scripts, and docs. It excludes local profiles, account vaults, auth.json, chat databases, node_modules, credentials, and application binaries. The build manifest records the exact commit and artifact checksum. Git archive makes the source ZIP reproducible for the same commit and Git archive behavior.
+The setup EXE contains add-on source, installer scripts, licenses, and a private Windows x64 Node.js runtime. Node.js is downloaded from its official distribution at the pinned version/checksum in build/runtime.json; a mismatch stops the build. The installer excludes local profiles, account vaults, auth.json, chat databases, node_modules, credentials, and official Codex binaries. The build manifest records the exact source commit, compiler version, runtime archive checksum, and installer checksum.
 
-Remote artifacts are downloaded to dist/. Validate SHA256SUMS.txt before uploading them to a GitHub release. The Windows installer compiles the DPAPI helper locally using the included C# source; it does not download an opaque executable from the builder.
+Remote artifacts are downloaded to dist/. The public release contains only the setup EXE; its checksum and build provenance belong in the release notes. The Windows installer compiles the DPAPI helper locally using the included C# source. NSIS and its common files are downloaded through signed Debian package indexes and unpacked into an owned temporary directory when makensis is absent; no system package installation is required.
+
+The EXE is unsigned. No signing certificate is configured. Windows publisher/reputation dialogs may appear; the installer does not suppress them or change security settings.
 
 ## Scope
 

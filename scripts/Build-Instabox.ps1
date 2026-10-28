@@ -25,7 +25,7 @@ try{
  if(-not $match.Success){throw 'Build succeeded but no validated artifact path was returned.'}
  $out=[IO.Path]::GetFullPath($OutputDirectory);New-Item -ItemType Directory -Path $out -Force | Out-Null
  $metadata=Get-Content -LiteralPath (Join-Path $repo 'package.json') -Raw | ConvertFrom-Json
- $artifact=$metadata.name+'-v'+$metadata.version+'.zip'
+ $artifact=$metadata.name+'-v'+$metadata.version+'-setup.exe'
  foreach($name in @($artifact,'SHA256SUMS.txt','build-report.json','portable-tests.txt')){
   & $cli pull $Box ($match.Groups[1].Value+'/'+$name) (Join-Path $out $name)
   if($LASTEXITCODE -ne 0){throw ('Artifact download failed: '+$name)}
